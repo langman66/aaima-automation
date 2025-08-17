@@ -1,0 +1,41 @@
+variable "name_prefix" {}
+variable "location" {}
+variable "rg_name" {}
+variable "tags" { type = map(string) }
+
+data "azurerm_resource_group" "hub" { name = var.rg_name }
+
+resource "azurerm_key_vault" "kv" {
+  name                        = "kv-${var.name_prefix}-wus2"
+  location                    = var.location
+  resource_group_name         = data.azurerm_resource_group.hub.name
+  tenant_id                   = data.azurerm_client_config.current.tenant_id
+  sku_name                    = "standard"
+  purge_protection_enabled    = true
+  soft_delete_retention_days  = 7
+  enable_rbac_authorization   = true
+  tags                        = var.tags
+}
+
+data "azurerm_client_config" "current" {}
+
+# Self-signed certificate for AppGW (to be replaced later)
+resource "azurerm_key_vault_certificate" "self_signed" {
+  name         = "agw-temp-cert"
+  key_vault_id = azurerm_key_vault.kv.id
+  certificate_policy {
+    issuer_parameters { name = "Self" }
+    key_properties { exportable = true key_size = 2048 key_type = "RSA" reuse_key = true }
+    lifetime_actions { action { action_type = "AutoRenew" } trigger { days_before_expiry = 30 } }
+    secret_properties { content_type = "application/x-pkcs12" }
+    x509_certificate_properties {
+      subject            = "CN=aaima.local"
+      validity_in_months = 12
+      key_usage          = ["digitalSignature", "keyEncipherment"]
+      extended_key_usage = ["1.3.6.1.5.5.7.3.1"] # Server Auth
+    }
+  }
+}
+
+output "kv_id" { value = azurerm_key_vault.kv.id }
+output "self_signed_cert_secret_id" { value = azurerm_key_vault_certificate.self_signed.secret_id }

@@ -1,0 +1,1 @@
+{"scriptFile":"index.js","bindings":[{"authLevel":"Function","type":"httpTrigger","direction":"in","name":"req","methods":["post"],"route":"enqueue"},{"type":"http","direction":"out","name":"res"}]}

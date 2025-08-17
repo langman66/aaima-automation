@@ -1,0 +1,1 @@
+{"name":"aaima-func","version":"1.0.0","main":"index.js","license":"MIT","dependencies":{"@azure/service-bus":"^7.9.5"}}
