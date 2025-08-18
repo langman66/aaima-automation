@@ -11,5 +11,5 @@ variable "environment" {
 }
 variable "name_prefix" {
   type    = string
-  default = "aaima"
+  default = "aaimadev"
 }

@@ -18,10 +18,9 @@ resource "azurerm_servicebus_namespace" "ns" {
 }
 
 resource "azurerm_servicebus_queue" "q" {
-  name                = "q-${var.name_prefix}-requests"
-  resource_group_name = var.rg_name
-  namespace_name      = azurerm_servicebus_namespace.ns.name
-  max_delivery_count  = 10
+  name               = "q-${var.name_prefix}-requests"
+  namespace_id       = azurerm_servicebus_namespace.ns.id
+  max_delivery_count = 10
 }
 
 resource "azurerm_private_endpoint" "sb" {
@@ -47,8 +46,13 @@ resource "azurerm_monitor_diagnostic_setting" "sb_diag" {
   name                       = "diag-sb"
   target_resource_id         = azurerm_servicebus_namespace.ns.id
   log_analytics_workspace_id = var.log_analytics_id
-  metric { category = "AllMetrics" enabled = true }
-  enabled_log { category = "OperationalLogs" }
+  metric {
+    category = "AllMetrics"
+    enabled  = true
+  }
+  enabled_log {
+    category = "OperationalLogs"
+  }
 }
 
 output "queue_id"       { value = azurerm_servicebus_queue.q.id }

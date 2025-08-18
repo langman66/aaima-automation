@@ -23,7 +23,7 @@ resource "azurerm_subnet" "sb_pe" {
   resource_group_name  = azurerm_resource_group.spoke.name
   virtual_network_name = azurerm_virtual_network.spoke.name
   address_prefixes     = [var.sb_pe_cidr]
-  private_endpoint_network_policies_enabled = false
+  private_endpoint_network_policies = "Disabled" // replaces *_enabled = false
 }
 
 output "rg_name" { value = azurerm_resource_group.spoke.name }

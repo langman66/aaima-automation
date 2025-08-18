@@ -39,7 +39,7 @@ resource "azurerm_subnet" "func_pe" {
   resource_group_name  = azurerm_resource_group.spoke.name
   virtual_network_name = azurerm_virtual_network.spoke.name
   address_prefixes     = [var.func_pe_cidr]
-  private_endpoint_network_policies_enabled = false
+  private_endpoint_network_policies = "Disabled" // replaces *_enabled = false
 }
 
 resource "azurerm_subnet_route_table_association" "assoc" {
