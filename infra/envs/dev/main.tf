@@ -102,22 +102,22 @@ module "service_bus" {
   tags                = local.tags
 }
 
-# module "function_app" {
-#   source                    = "../../modules/function_app"
-#   name_prefix               = local.prefix
-#   location                  = local.location
-#   rg_name                   = module.spoke_app.rg_name
-#   vnet_id                   = module.spoke_app.vnet_id
-#   func_integ_subnet_id      = module.spoke_app.subnets["func_integ"]
-#   func_pe_subnet_id         = module.spoke_app.subnets["func_pe"]
-#   private_dns_zone_id_sites = module.private_dns.zones["websites"]
-#   storage_dns_zone_ids = {
-#     blob  = module.private_dns.zones["blob"]
-#     queue = module.private_dns.zones["queue"]
-#   }
-#   log_analytics_id = module.logs.law_id
-#   tags             = local.tags
-# }
+module "function_app" {
+  source                    = "../../modules/function_app"
+  name_prefix               = local.prefix
+  location                  = local.location
+  rg_name                   = module.spoke_app.rg_name
+  vnet_id                   = module.spoke_app.vnet_id
+  func_integ_subnet_id      = module.spoke_app.subnets["func_integ"]
+  func_pe_subnet_id         = module.spoke_app.subnets["func_pe"]
+  private_dns_zone_id_sites = module.private_dns.zones["websites"]
+  storage_dns_zone_ids = {
+    blob  = module.private_dns.zones["blob"]
+    queue = module.private_dns.zones["queue"]
+  }
+  log_analytics_id = module.logs.law_id
+  tags             = local.tags
+}
 
 # module "rbac" {
 #   source               = "../../modules/rbac"
