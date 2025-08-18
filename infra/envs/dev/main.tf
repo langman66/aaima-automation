@@ -126,13 +126,17 @@ module "rbac" {
   scope_resource_id    = module.service_bus.queue_id
 }
 
-# module "keyvault" {
-#   source      = "../../modules/keyvault"
-#   name_prefix = local.prefix
-#   location    = local.location
-#   rg_name     = module.hub.rg_name
-#   tags        = local.tags
-# }
+module "keyvault" {
+  source      = "../../modules/keyvault"
+  name_prefix = local.prefix
+  location    = local.location
+  rg_name     = module.hub.rg_name
+  tags        = local.tags
+  
+  // NEW: wire subnet and DNS zone for the KV Private Endpoint
+  kv_pe_subnet_id          = module.hub.subnets["kv_pe"]
+  private_dns_zone_id_vault = module.private_dns.zones["vault"]  
+}
 
 # module "app_gateway" {
 #   source              = "../../modules/app_gateway"

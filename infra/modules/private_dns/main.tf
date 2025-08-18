@@ -27,6 +27,11 @@ resource "azurerm_private_dns_zone" "queue" {
   resource_group_name = data.azurerm_resource_group.hub.name
 }
 
+resource "azurerm_private_dns_zone" "kv" {
+  name                = "privatelink.vaultcore.azure.net"
+  resource_group_name = data.azurerm_resource_group.hub.name
+}
+
 # Links to hub
 resource "azurerm_private_dns_zone_virtual_network_link" "hub_links" {
   for_each = {
@@ -34,6 +39,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "hub_links" {
     sb    = azurerm_private_dns_zone.sb.id
     blob  = azurerm_private_dns_zone.blob.id
     queue = azurerm_private_dns_zone.queue.id
+    vault = azurerm_private_dns_zone.kv.id
   }
   name                  = "lnk-${each.key}-hub"
   private_dns_zone_name = element(split("/", each.value), length(split("/", each.value)) - 1)
@@ -80,11 +86,21 @@ resource "azurerm_private_dns_zone_virtual_network_link" "spoke_links_queue" {
   registration_enabled  = false
 }
 
+resource "azurerm_private_dns_zone_virtual_network_link" "spoke_links_kv" {
+  for_each = { for idx, vnet in var.spoke_ids : idx => vnet }
+  name                  = "lnk-kv-spoke-${each.key}"
+  private_dns_zone_name = azurerm_private_dns_zone.kv.name
+  resource_group_name   = data.azurerm_resource_group.hub.name
+  virtual_network_id    = each.value
+  registration_enabled  = false
+}
+
 output "zones" {
   value = {
     websites   = azurerm_private_dns_zone.web.id
     servicebus = azurerm_private_dns_zone.sb.id
     blob       = azurerm_private_dns_zone.blob.id
     queue      = azurerm_private_dns_zone.queue.id
+    vault      = azurerm_private_dns_zone.kv.id
   }
 }

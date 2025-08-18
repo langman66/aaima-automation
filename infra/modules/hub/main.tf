@@ -32,11 +32,20 @@ resource "azurerm_subnet" "firewall" {
   address_prefixes     = ["10.0.1.0/24"]
 }
 
+resource "azurerm_subnet" "kv_pe" {
+  name                  = "snet-kv-pe"
+  resource_group_name   = azurerm_resource_group.hub.name
+  virtual_network_name  = azurerm_virtual_network.hub.name
+  address_prefixes      = ["10.0.2.0/24"]
+  private_endpoint_network_policies = "Disabled"
+}
+
 output "rg_name" { value = azurerm_resource_group.hub.name }
 output "vnet_id" { value = azurerm_virtual_network.hub.id }
 output "subnets" {
   value = {
     appgw         = azurerm_subnet.appgw.id
     azure_firewall= azurerm_subnet.firewall.id
+    kv_pe         = azurerm_subnet.kv_pe.id
   }
 }
