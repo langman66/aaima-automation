@@ -41,16 +41,16 @@ module "hub" {
   log_analytics_id = module.logs.law_id
 }
 
-# module "firewall" {
-#   source             = "../../modules/firewall"
-#   name_prefix        = local.prefix
-#   location           = local.location
-#   hub_rg_name        = module.hub.rg_name
-#   hub_vnet_id        = module.hub.vnet_id
-#   firewall_subnet_id = module.hub.subnets["azure_firewall"]
-#   log_analytics_id   = module.logs.law_id
-#   tags               = local.tags
-# }
+module "firewall" {
+  source             = "../../modules/firewall"
+  name_prefix        = local.prefix
+  location           = local.location
+  hub_rg_name        = module.hub.rg_name
+  hub_vnet_id        = module.hub.vnet_id
+  firewall_subnet_id = module.hub.subnets["azure_firewall"]
+  log_analytics_id   = module.logs.law_id
+  tags               = local.tags
+}
 
 # module "spoke_app" {
 #   source          = "../../modules/spoke_app"
