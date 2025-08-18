@@ -90,17 +90,17 @@ module "private_dns" {
   tags        = local.tags
 }
 
-# module "service_bus" {
-#   source              = "../../modules/service_bus"
-#   name_prefix         = local.prefix
-#   location            = local.location
-#   rg_name             = module.spoke_msg.rg_name
-#   vnet_id             = module.spoke_msg.vnet_id
-#   sb_pe_subnet_id     = module.spoke_msg.subnets["sb_pe"]
-#   private_dns_zone_id = module.private_dns.zones["servicebus"]
-#   log_analytics_id    = module.logs.law_id
-#   tags                = local.tags
-# }
+module "service_bus" {
+  source              = "../../modules/service_bus"
+  name_prefix         = local.prefix
+  location            = local.location
+  rg_name             = module.spoke_msg.rg_name
+  vnet_id             = module.spoke_msg.vnet_id
+  sb_pe_subnet_id     = module.spoke_msg.subnets["sb_pe"]
+  private_dns_zone_id = module.private_dns.zones["servicebus"]
+  log_analytics_id    = module.logs.law_id
+  tags                = local.tags
+}
 
 # module "function_app" {
 #   source                    = "../../modules/function_app"

@@ -12,8 +12,10 @@ resource "azurerm_servicebus_namespace" "ns" {
   location                      = var.location
   resource_group_name           = var.rg_name
   sku                           = "Premium"
-  minimum_tls_version           = "1.2"
+  premium_messaging_partitions  = 1
+  capacity                      = 1 // replaces `premium_messaging_partitions` for Premium; valid values: 1, 2, 4
   public_network_access_enabled = false
+  local_auth_enabled            = false   // required by policy https://aka.ms/disablelocalauth-sb  
   tags                          = var.tags
 }
 
@@ -46,10 +48,9 @@ resource "azurerm_monitor_diagnostic_setting" "sb_diag" {
   name                       = "diag-sb"
   target_resource_id         = azurerm_servicebus_namespace.ns.id
   log_analytics_workspace_id = var.log_analytics_id
-  metric {
+  enabled_metric {
     category = "AllMetrics"
-    enabled  = true
-  }
+  }  
   enabled_log {
     category = "OperationalLogs"
   }
