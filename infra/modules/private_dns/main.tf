@@ -7,10 +7,25 @@ variable "tags" { type = map(string) }
 
 data "azurerm_resource_group" "hub" { name = var.hub_rg_name }
 
-resource "azurerm_private_dns_zone" "web"   { name = "privatelink.azurewebsites.net"   resource_group_name = data.azurerm_resource_group.hub.name }
-resource "azurerm_private_dns_zone" "sb"    { name = "privatelink.servicebus.windows.net" resource_group_name = data.azurerm_resource_group.hub.name }
-resource "azurerm_private_dns_zone" "blob"  { name = "privatelink.blob.core.windows.net"  resource_group_name = data.azurerm_resource_group.hub.name }
-resource "azurerm_private_dns_zone" "queue" { name = "privatelink.queue.core.windows.net" resource_group_name = data.azurerm_resource_group.hub.name }
+resource "azurerm_private_dns_zone" "web" {
+  name                = "privatelink.azurewebsites.net"
+  resource_group_name = data.azurerm_resource_group.hub.name
+}
+
+resource "azurerm_private_dns_zone" "sb" {
+  name                = "privatelink.servicebus.windows.net"
+  resource_group_name = data.azurerm_resource_group.hub.name
+}
+
+resource "azurerm_private_dns_zone" "blob" {
+  name                = "privatelink.blob.core.windows.net"
+  resource_group_name = data.azurerm_resource_group.hub.name
+}
+
+resource "azurerm_private_dns_zone" "queue" {
+  name                = "privatelink.queue.core.windows.net"
+  resource_group_name = data.azurerm_resource_group.hub.name
+}
 
 # Links to hub
 resource "azurerm_private_dns_zone_virtual_network_link" "hub_links" {

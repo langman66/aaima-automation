@@ -80,15 +80,15 @@ module "peering" {
   spoke_ids   = [module.spoke_app.vnet_id, module.spoke_msg.vnet_id]
 }
 
-# module "private_dns" {
-#   source      = "../../modules/private_dns"
-#   name_prefix = local.prefix
-#   location    = local.location
-#   hub_rg_name = module.hub.rg_name
-#   hub_vnet_id = module.hub.vnet_id
-#   spoke_ids   = [module.spoke_app.vnet_id, module.spoke_msg.vnet_id]
-#   tags        = local.tags
-# }
+module "private_dns" {
+  source      = "../../modules/private_dns"
+  name_prefix = local.prefix
+  location    = local.location
+  hub_rg_name = module.hub.rg_name
+  hub_vnet_id = module.hub.vnet_id
+  spoke_ids   = [module.spoke_app.vnet_id, module.spoke_msg.vnet_id]
+  tags        = local.tags
+}
 
 # module "service_bus" {
 #   source              = "../../modules/service_bus"
