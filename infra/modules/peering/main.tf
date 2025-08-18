@@ -2,10 +2,15 @@ variable "hub_rg_name" {}
 variable "hub_vnet_id" {}
 variable "spoke_ids" { type = list(string) }
 
-data "azurerm_virtual_network" "hub" { id = var.hub_vnet_id }
+data "azurerm_virtual_network" "hub" { 
+  id = var.hub_vnet_id 
+}
 
 # Create peering between hub and each spoke (both directions)
-locals { hub_name = data.azurerm_virtual_network.hub.name, hub_rg = var.hub_rg_name }
+locals { 
+  hub_name = data.azurerm_virtual_network.hub.name 
+  hub_rg = var.hub_rg_name 
+}
 
 resource "azurerm_virtual_network_peering" "hub_to_spoke" {
   for_each                  = toset(var.spoke_ids)

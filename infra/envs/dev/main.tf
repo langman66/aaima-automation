@@ -18,10 +18,10 @@ locals {
   location = var.location
   region   = "wus2"
   tags = {
-    project = local.prefix
-    env     = var.environment
-    region  = local.region
-    owner   = "platform",
+    project   = local.prefix
+    env       = var.environment
+    region    = local.region
+    owner     = "platform",
     ringValue = "r0"
   }
 }
@@ -64,21 +64,21 @@ module "spoke_app" {
   tags            = local.tags
 }
 
-# module "spoke_msg" {
-#   source        = "../../modules/spoke_msg"
-#   name_prefix   = local.prefix
-#   location      = local.location
-#   address_space = ["10.20.0.0/16"]
-#   sb_pe_cidr    = "10.20.1.0/24"
-#   tags          = local.tags
-# }
+module "spoke_msg" {
+  source        = "../../modules/spoke_msg"
+  name_prefix   = local.prefix
+  location      = local.location
+  address_space = ["10.20.0.0/16"]
+  sb_pe_cidr    = "10.20.1.0/24"
+  tags          = local.tags
+}
 
-# module "peering" {
-#   source      = "../../modules/peering"
-#   hub_rg_name = module.hub.rg_name
-#   hub_vnet_id = module.hub.vnet_id
-#   spoke_ids   = [module.spoke_app.vnet_id, module.spoke_msg.vnet_id]
-# }
+module "peering" {
+  source      = "../../modules/peering"
+  hub_rg_name = module.hub.rg_name
+  hub_vnet_id = module.hub.vnet_id
+  spoke_ids   = [module.spoke_app.vnet_id, module.spoke_msg.vnet_id]
+}
 
 # module "private_dns" {
 #   source      = "../../modules/private_dns"
