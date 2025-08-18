@@ -57,7 +57,7 @@ resource "azurerm_monitor_diagnostic_setting" "fw_diag" {
   name                       = "diag-afw"
   target_resource_id         = azurerm_firewall.fw.id
   log_analytics_workspace_id = var.log_analytics_id
-  metric {
+  enabled_metric {
     category = "AllMetrics"
   }
   enabled_log { category = "AzureFirewallApplicationRule" }
