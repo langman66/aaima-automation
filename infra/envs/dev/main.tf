@@ -21,7 +21,8 @@ locals {
     project = local.prefix
     env     = var.environment
     region  = local.region
-    owner   = "platform"
+    owner   = "platform",
+    ringValue = "r0"
   }
 }
 
@@ -52,16 +53,16 @@ module "firewall" {
   tags               = local.tags
 }
 
-# module "spoke_app" {
-#   source          = "../../modules/spoke_app"
-#   name_prefix     = local.prefix
-#   location        = local.location
-#   address_space   = ["10.10.0.0/16"]
-#   func_integ_cidr = "10.10.1.0/24"
-#   func_pe_cidr    = "10.10.2.0/24"
-#   egress_rt_id    = module.firewall.egress_rt_id
-#   tags            = local.tags
-# }
+module "spoke_app" {
+  source          = "../../modules/spoke_app"
+  name_prefix     = local.prefix
+  location        = local.location
+  address_space   = ["10.10.0.0/16"]
+  func_integ_cidr = "10.10.1.0/24"
+  func_pe_cidr    = "10.10.2.0/24"
+  egress_rt_id    = module.firewall.egress_rt_id
+  tags            = local.tags
+}
 
 # module "spoke_msg" {
 #   source        = "../../modules/spoke_msg"
