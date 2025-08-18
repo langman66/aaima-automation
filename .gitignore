@@ -8,7 +8,11 @@ crash.log
 *.tfvars.json
 
 # Terraform plan output
+*.tfplan
 *.plan
+plan.out
+tfplan
+tfplan.*
 
 # .terraform directory (modules, plugins, local backend, etc.)
 .terraform/

@@ -1,5 +1,5 @@
 resource_group_name  = "rg-aaima-tfstate-wus2"
-storage_account_name = "aaimatfstatewus2"
+storage_account_name = "saaaimatfstatewus2"
 container_name       = "tfstate"
 key                  = "dev.tfstate"
 subscription_id      = "be919d3c-e0c6-4f3a-87f3-826d529e6788"
