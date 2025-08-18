@@ -119,12 +119,12 @@ module "function_app" {
   tags             = local.tags
 }
 
-# module "rbac" {
-#   source               = "../../modules/rbac"
-#   principal_id         = module.function_app.identity_principal_id
-#   role_definition_name = "Azure Service Bus Data Sender"
-#   scope_resource_id    = module.service_bus.queue_id
-# }
+module "rbac" {
+  source               = "../../modules/rbac"
+  principal_id         = module.function_app.identity_principal_id
+  role_definition_name = "Azure Service Bus Data Sender"
+  scope_resource_id    = module.service_bus.queue_id
+}
 
 # module "keyvault" {
 #   source      = "../../modules/keyvault"
