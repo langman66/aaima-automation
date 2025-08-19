@@ -138,16 +138,16 @@ module "keyvault" {
   private_dns_zone_id_vault = module.private_dns.zones["vault"]  
 }
 
-# module "app_gateway" {
-#   source              = "../../modules/app_gateway"
-#   name_prefix         = local.prefix
-#   location            = local.location
-#   rg_name             = module.hub.rg_name
-#   appgw_subnet_id     = module.hub.subnets["appgw"]
-#   backend_host_fqdn   = module.function_app.default_hostname
-#   waf_mode            = "Prevention"
-#   key_vault_id        = module.keyvault.kv_id
-#   key_vault_secret_id = module.keyvault.self_signed_cert_secret_id
-#   log_analytics_id    = module.logs.law_id
-#   tags                = local.tags
-# }
+module "app_gateway" {
+  source              = "../../modules/app_gateway"
+  name_prefix         = local.prefix
+  location            = local.location
+  rg_name             = module.hub.rg_name
+  appgw_subnet_id     = module.hub.subnets["appgw"]
+  backend_host_fqdn   = module.function_app.default_hostname
+  waf_mode            = "Prevention"
+  key_vault_id        = module.keyvault.kv_id
+  key_vault_secret_id = module.keyvault.self_signed_cert_secret_id
+  log_analytics_id    = module.logs.law_id
+  tags                = local.tags
+}
