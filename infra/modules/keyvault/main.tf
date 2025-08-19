@@ -53,6 +53,17 @@ data "azurerm_client_config" "current" {}
 resource "azurerm_key_vault_certificate" "self_signed" {
   name         = "agw-temp-cert"
   key_vault_id = azurerm_key_vault.kv.id
+
+  // ensure PE + DNS exist first (won’t fix off‑VNet access, but correct ordering)
+#   Option A — Run Terraform from inside the VNet
+
+# Use a self-hosted runner or VM in the hub VNet.
+# Confirm DNS resolves your vault to a private IP:
+# nslookup kv-<prefix>-wus2.vault.azure.net returns a privatelink IP.
+# Then re-apply; the existing code will work.
+# Option B — Defer certificate creation when running outside the VNet Add a toggle and dependency to the module:
+  depends_on = [azurerm_private_endpoint.kv]
+
   certificate_policy {
     issuer_parameters {
       name = "Self"
