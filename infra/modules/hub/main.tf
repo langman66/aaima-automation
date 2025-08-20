@@ -40,6 +40,21 @@ resource "azurerm_subnet" "kv_pe" {
   private_endpoint_network_policies = "Disabled"
 }
 
+resource "azurerm_subnet" "bastion" {
+  name                 = "AzureBastionSubnet"
+  resource_group_name  = azurerm_resource_group.hub.name
+  virtual_network_name = azurerm_virtual_network.hub.name
+  address_prefixes     = ["10.0.3.0/27"]
+}
+
+resource "azurerm_subnet" "mgmt" {
+  name                 = "Mgmt"
+  resource_group_name  = azurerm_resource_group.hub.name
+  virtual_network_name = azurerm_virtual_network.hub.name
+  address_prefixes     = ["10.0.10.0/24"]
+}
+
+
 output "rg_name" { value = azurerm_resource_group.hub.name }
 output "vnet_id" { value = azurerm_virtual_network.hub.id }
 output "subnets" {
@@ -47,5 +62,7 @@ output "subnets" {
     appgw         = azurerm_subnet.appgw.id
     azure_firewall= azurerm_subnet.firewall.id
     kv_pe         = azurerm_subnet.kv_pe.id
+    bastion        = azurerm_subnet.bastion.id
+    mgmt           = azurerm_subnet.mgmt.id
   }
 }

@@ -1,0 +1,17 @@
+#cloud-config
+package_update: true
+packages:
+  - ca-certificates
+  - curl
+  - gnupg
+runcmd:
+  - apt-get update -y
+  - apt-get install -y apt-transport-https lsb-release software-properties-common
+  # Install Azure CLI
+  - curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+  # Install Terraform
+  - curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+  - echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" > /etc/apt/sources.list.d/hashicorp.list
+  - apt-get update -y && apt-get install -y terraform
+  # Quality of life
+  - echo 'alias tf=terraform' >> /etc/profile

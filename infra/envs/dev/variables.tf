@@ -13,3 +13,6 @@ variable "name_prefix" {
   type    = string
   default = "aaimadev"
 }
+variable "ssh_public_key_path" { 
+  type = string 
+}

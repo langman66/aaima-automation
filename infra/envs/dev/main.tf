@@ -134,9 +134,39 @@ module "keyvault" {
   tags        = local.tags
   
   // NEW: wire subnet and DNS zone for the KV Private Endpoint
-  kv_pe_subnet_id          = module.hub.subnets["kv_pe"]
-  private_dns_zone_id_vault = module.private_dns.zones["vault"]  
+  #kv_pe_subnet_id          = module.hub.subnets["kv_pe"]
+  #private_dns_zone_id_vault = module.private_dns.zones["vault"]  
 }
+
+# === BEGIN CHANGES ===
+# === Management & Access ===
+module "bastion" {
+  source            = "../../modules/bastion"
+  rg_name           = module.hub.rg_name
+  location          = local.location
+  bastion_subnet_id = module.hub.subnets["bastion"]
+}
+
+# module "jumpbox" {
+#   source             = "../../modules/jumpbox"
+#   rg_name            = module.hub.rg_name
+#   location           = local.location
+#   mgmt_subnet_id     = module.hub.subnets["mgmt"]
+#   ssh_public_key_path= var.ssh_public_key_path
+# }
+
+# Key Vault Private Endpoint (in Hub PE subnet)
+module "keyvault_pe" {
+  source       = "../../modules/keyvault_pe"
+  name_prefix = local.prefix
+  rg_name      = module.hub.rg_name
+  location     = local.location
+  vnet_id      = module.hub.vnet_id
+  pe_subnet_id = module.hub.subnets["kv_pe"]
+  kv_id        = module.keyvault.kv_id
+  private_dns_zone_id_vault = module.private_dns.zones["vault"]
+}
+# === END CHANGES ===
 
 module "app_gateway" {
   source              = "../../modules/app_gateway"
@@ -147,7 +177,7 @@ module "app_gateway" {
   backend_host_fqdn   = module.function_app.default_hostname
   waf_mode            = "Prevention"
   key_vault_id        = module.keyvault.kv_id
-  key_vault_secret_id = module.keyvault.self_signed_cert_secret_id
+  key_vault_secret_id = module.keyvault_pe.self_signed_cert_secret_id
   log_analytics_id    = module.logs.law_id
   tags                = local.tags
 }
